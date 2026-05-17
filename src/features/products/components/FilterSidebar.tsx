@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import type {  CategoryReq,  } from "../types";
+import type { CategoryReq } from "../types";
 
 type Props = {
   categories: CategoryReq[];
@@ -25,11 +25,10 @@ const FilterSidebar: React.FC<Props> = ({
         }
       });
       setSelectedCategories(list);
+    } else {
+      setSelectedCategories([]);
     }
   }, [selected, categories]);
-
-
-  
 
   const handleToggle = (id: number) => {
     if (selectedCategories.includes(id)) {
@@ -48,28 +47,31 @@ const FilterSidebar: React.FC<Props> = ({
   };
 
   return (
-    <div className="w-64 p-4 border-r min-h-screen">
-      <h2 className="font-semibold mb-4">Categories</h2>
+    <aside className="sidebar">
+      <h2 className="sidebar-title">Categories</h2>
 
-      <div className="flex flex-col gap-3">
+      <div className="filter-group">
         {categories.map((cat) => (
-          <label
-            key={cat.id}
-            className="flex items-center gap-2 cursor-pointer"
-          >
+          <label key={cat.id} className="filter-item">
             <input
               type="checkbox"
+              className="filter-checkbox"
               checked={selectedCategories.includes(cat.id)}
               onChange={() => handleToggle(cat.id)}
             />
-            <span>{cat.name}</span>
+            <span className="category-name">{cat.name}</span>
           </label>
         ))}
-        <button onClick={onFilter} disabled={loader}>
-          {loader ? "Filtering..." : "Filter"}
+        
+        <button 
+          className="apply-filter-btn" 
+          onClick={onFilter} 
+          disabled={loader}
+        >
+          {loader ? "Filtering..." : "Apply Filters"}
         </button>
       </div>
-    </div>
+    </aside>
   );
 };
 
