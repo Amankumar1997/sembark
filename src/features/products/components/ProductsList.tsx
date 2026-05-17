@@ -1,9 +1,12 @@
-import React from 'react'
-
+import React, { useEffect } from "react";
+import { getProducts } from "@/features/products/api/productApi";
 const ProductsList = () => {
-  return (
-    <div>ProductsList</div>
-  )
-}
+  
+  useEffect(() => {
+    getProducts();
+  }, []);
 
-export default ProductsList
+  return <div>ProductsList</div>;
+};
+
+export default ProductsList;
