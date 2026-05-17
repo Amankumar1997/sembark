@@ -18,3 +18,14 @@ export interface Product {
   creationAt: string;
   updatedAt: string;
 }
+
+export interface CategoryReq {
+  name: string;
+  id: number;
+}
+export interface Category extends CategoryReq {
+  creationAt: string;
+  image: string;
+  slug: string;
+  updatedAt: string;
+}
