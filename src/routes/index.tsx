@@ -1,18 +1,32 @@
-import { createBrowserRouter } from "react-router";
-import Products from "@/pages/Home";
-import ProductDetail from "@/pages/ProductDetail";
-import Cart from "@/pages/Cart";
-export const router = createBrowserRouter([
+import { createBrowserRouter, Navigate } from "react-router";
+import Products from "@/pages/HomePage";
+import ProductDetail from "@/pages/ProductDetailPage";
+import Cart from "@/pages/CartPage";
+import MainLayout from "@/layout/MainLayout";
+
+const appRoutes = [
   {
-    path: "/",
+    index: true,
     element: <Products />,
   },
   {
-    path: "/:productId",
+    path: ":productId",
     element: <ProductDetail />,
   },
   {
-    path: "/product-cart",
+    path: "product-cart",
     element: <Cart />,
+  },
+];
+
+export const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <MainLayout />,
+    children: appRoutes,
+  },
+  {
+    path: "*", //at the end try to add 404 found before buld 
+    element: <Navigate to="/" replace />,
   },
 ]);
