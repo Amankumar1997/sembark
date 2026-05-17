@@ -29,3 +29,7 @@ export interface Category extends CategoryReq {
   slug: string;
   updatedAt: string;
 }
+
+export interface CartItem extends Product {
+  quantity: number;
+}

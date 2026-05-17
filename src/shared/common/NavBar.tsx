@@ -17,7 +17,7 @@ const Navbar = () => {
             Home
           </Link>
 
-          <Link to="/cart" className="nav-link cart-link">
+          <Link to="/product-cart" className="nav-link cart-link">
             <span>Cart</span>
             {cart?.length > 0 && (
               <span className="cart-badge">{cart.length}</span>
