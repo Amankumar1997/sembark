@@ -1,14 +1,19 @@
 import { apiClient } from "@/shared/api/apiClient";
 import { ENDPOINTS } from "@/shared/endpoints";
 import type { Product } from "@/features/products/types";
+import axios from "axios";
 
 export const getProducts = async () => {
   try {
     const response = await apiClient.get<Product[]>(ENDPOINTS.PRODUCTS);
     return response.data;
-  } catch (error) {
-    return error;
+  } catch (err: unknown) {
+    if (axios.isAxiosError(err)) {
+      return err.response?.data?.message || err.message;
+    } else if (err instanceof Error) {
+      return err.message;
+    } else {
+      return "Something went wrong";
+    }
   }
 };
-
-
