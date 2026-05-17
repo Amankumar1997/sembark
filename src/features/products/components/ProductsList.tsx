@@ -1,12 +1,17 @@
 import Loader from "@/shared/common/Loader";
 import { useProduct } from "../hooks/useProducts";
-import { Fragment, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useCategory } from "../hooks/useCategories";
 import FilterSidebar from "./FilterSidebar";
 import { Link, useSearchParams } from "react-router";
+import { useCart } from "@/context/CartContext";
+import "@/assets/ProductList.css";
+
 const ProductsList = () => {
-  const { loader, products, errors, fetchProducts } = useProduct();
+  const { loader, products, errors, fetchProducts, setLoader } = useProduct();
   const { categoryLoader, categories } = useCategory();
+  const { cart, addToCart, removeFromCart } = useCart();
+
   const [selectedCategories, setCategory] = useState<string[]>([]);
   const [searchParams, setSearchParams] = useSearchParams();
   const [filterLoader, setFilterLoader] = useState<boolean>(false);
@@ -14,40 +19,73 @@ const ProductsList = () => {
   useEffect(() => {
     const categoryParams = searchParams.get("categories");
     setCategory(categoryParams?.split(",") || []);
+    setLoader(true);
     fetchProducts(categoryParams || "");
   }, [searchParams]);
 
+  useEffect(() => {
+    if (!loader) {
+      setFilterLoader(false);
+    }
+  }, [loader]);
+
   const handleFilter = (selectedList: string[]) => {
-    setSearchParams({
-      categories: selectedList.join(","),
-    });
+    setSearchParams({ categories: selectedList.join(",") });
     setFilterLoader(true);
     setCategory(selectedList);
   };
 
   if (loader || categoryLoader) return <Loader />;
-  if (errors) return <div>There is Something went wrong</div>;
+  if (errors) return <div className="error-box">Something went wrong</div>;
+
   return (
-    <>
+    <div className="products-container">
       <FilterSidebar
         categories={categories}
         selected={selectedCategories}
         handleFilter={handleFilter}
         loader={filterLoader}
       />
-      {products.map((prd) => {
-        const { id, title, images, price } = prd;
-        return (
-          <Fragment key={id}>
-            <Link to={`/${id}`}>
-              <p>{title}</p>
-              <p>{price}</p>
-              <img alt="Product Image" src={images[0]} />
-            </Link>
-          </Fragment>
-        );
-      })}
-    </>
+
+      <main className="main-content">
+        <div className="products-grid">
+          {products.map((prd) => {
+            const { id, title, images, price } = prd;
+            const isItemInCart = cart.some((item) => item.id === id);
+
+            return (
+              <div key={id} className="product-card">
+                <Link to={`/product/${id}`} className="product-link">
+                  <img alt={title} src={images[0]} className="card-img" />
+                  <div className="card-info">
+                    <h3 className="card-title">{title}</h3>
+                    <p className="card-price">${price}</p>
+                  </div>
+                </Link>
+
+                <div className="card-actions">
+                  {isItemInCart ? (
+                    <button
+                      onClick={() => removeFromCart(id)}
+                      className="btn-card btn-remove"
+                    >
+                      Remove from Cart
+                    </button>
+                  ) : (
+                    <button
+                      onClick={() => addToCart(prd)}
+                      className="btn-card btn-add"
+                    >
+                      Add to Cart
+                    </button>
+                  )}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </main>
+    </div>
   );
 };
 

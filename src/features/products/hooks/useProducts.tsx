@@ -21,5 +21,5 @@ export const useProduct = () => {
     };
 
 
-  return { loader, products: productList, errors ,fetchProducts};
+  return { loader, products: productList, errors ,fetchProducts,setLoader};
 };
