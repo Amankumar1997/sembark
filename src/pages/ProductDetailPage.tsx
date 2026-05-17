@@ -1,8 +1,9 @@
+import { ProductDetails } from '@/features/products/components/ProductDetails'
 import React from 'react'
 
 const ProductDetail = () => {
   return (
-    <div>ProductDetail</div>
+    <ProductDetails/>
   )
 }
 
