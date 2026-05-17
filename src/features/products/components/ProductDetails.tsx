@@ -1,41 +1,55 @@
 // src/features/products/components/ProductDetail.tsx
-import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router";
-import type { Product } from "../types";
 import { useProductDetail } from "../hooks/useProductDetail";
 import Loader from "@/shared/common/Loader";
+import { useCart } from "@/context/CartContext";
+import "@/assets/ProductDetail.css"; // Ensure you import your CSS
 
 export const ProductDetails = () => {
   const { productId } = useParams();
-
   const { loader, product, errors } = useProductDetail(productId ?? "");
   const navigate = useNavigate();
-  // const { addToCart } = useCart();
+
+  const { cart, addToCart, removeFromCart } = useCart();
+
+  const isItemInCart = cart.some((item) => item.id === Number(productId));
 
   if (loader) return <Loader />;
-  if (errors) return <div>There is Something went wrong</div>;
+  if (errors) return <div className="error-msg">Something went wrong</div>;
+  if (!product) return null;
+
   return (
-    <div className="p-6 max-w-4xl mx-auto">
-      <button onClick={() => navigate("/")} className="mb-4 text-blue-600">
-        ← Back to Products
+    <div className="product-detail-container">
+      <button onClick={() => navigate("/")} className="back-link">
+        Back to Products
       </button>
-      <div className="grid md:grid-cols-2 gap-8">
-        <img
-          src={product?.images[0]}
-          alt={product?.title}
-          className="w-full rounded-lg shadow"
-        />
-        <div>
-          <h1 className="text-3xl font-bold mb-2">{product?.title}</h1>
-          <p className="text-gray-600 mb-4">{product?.description}</p>
-          <p className="text-2xl font-bold text-green-600 mb-6">
-            ${product?.price}
-          </p>
-          <button
-            className="w-full bg-blue-600 text-white py-3 rounded-lg font-bold hover:bg-blue-700 transition"
-          >
-            Add to Cart
-          </button>
+
+      <div className="product-detail-layout">
+        <div className="product-image-wrapper">
+          <img
+            src={product.images[0]}
+            alt={product.title}
+            className="product-image"
+          />
+        </div>
+
+        <div className="product-info-wrapper">
+          <h1 className="product-title">{product.title}</h1>
+          <p className="product-desc">{product.description}</p>
+          <p className="product-price">${product.price}</p>
+
+          {isItemInCart ? (
+            <button
+              onClick={() => removeFromCart(product.id)}
+              className="btn btn-remove"
+            >
+              Remove from Cart
+            </button>
+          ) : (
+            <button onClick={() => addToCart(product)} className="btn btn-add">
+              Add to Cart
+            </button>
+          )}
         </div>
       </div>
     </div>
