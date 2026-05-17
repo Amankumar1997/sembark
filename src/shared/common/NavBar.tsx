@@ -1,27 +1,29 @@
+import { useCart } from "@/context/CartContext";
 import { Link } from "react-router";
+import "@/assets/Navbar.css";
 
 const Navbar = () => {
-//   const { state } = useCart();
-
-//   const totalItems = state.items.reduce(
-//     (sum, item) => sum + item.quantity,
-//     0
-//   );
+  const { cart } = useCart();
 
   return (
-    <nav className="w-full shadow-md px-6 py-4 flex justify-between items-center">
-      <Link to="/" className="text-xl font-bold">
-        ShopApp
-      </Link>
-
-      <div className="flex items-center gap-6">
-        <Link to="/" className="hover:text-gray-600">
-          Home
+    <nav className="navbar">
+      <div className="navbar-container">
+        <Link to="/" className="navbar-logo">
+          Shop App
         </Link>
 
-        <Link to="/cart" className="relative hover:text-gray-600">
-          Cart 1
-        </Link>
+        <div className="navbar-links">
+          <Link to="/" className="nav-link">
+            Home
+          </Link>
+
+          <Link to="/cart" className="nav-link cart-link">
+            <span>Cart</span>
+            {cart?.length > 0 && (
+              <span className="cart-badge">{cart.length}</span>
+            )}
+          </Link>
+        </div>
       </div>
     </nav>
   );
