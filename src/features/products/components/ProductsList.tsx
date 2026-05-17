@@ -1,9 +1,10 @@
+import Loader from "@/shared/common/Loader";
 import { useProduct } from "../hooks/useProducts";
 import { Fragment } from "react";
 const ProductsList = () => {
   const { loader, products, errors } = useProduct();
 
-  if (loader) return <div>Loader...</div>;
+  if (loader) return <Loader/>
   if (errors) return <div>There is Something went wrong</div>;
   return (
     <>
