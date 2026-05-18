@@ -10,7 +10,7 @@ const appRoutes = [
     element: <Products />,
   },
   {
-    path: ":productId",
+    path: "product/:productId",
     element: <ProductDetail />,
   },
   {

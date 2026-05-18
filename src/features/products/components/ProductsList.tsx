@@ -66,14 +66,22 @@ const ProductsList = () => {
                 <div className="card-actions">
                   {isItemInCart ? (
                     <button
-                      onClick={() => removeFromCart(id)}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        removeFromCart(id);
+                      }}
                       className="btn-card btn-remove"
                     >
                       Remove from Cart
                     </button>
                   ) : (
                     <button
-                      onClick={() => addToCart(prd)}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        addToCart(prd);
+                      }}
                       className="btn-card btn-add"
                     >
                       Add to Cart
