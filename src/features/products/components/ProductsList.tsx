@@ -11,8 +11,8 @@ const ProductsList = () => {
   const { loader, products, errors, fetchProducts, setLoader } = useProduct();
   const { categoryLoader, categories } = useCategory();
   const { cart, addToCart, removeFromCart } = useCart();
-
   const [selectedCategories, setCategory] = useState<number[]>([]);
+  const [showSidebar, setShowSidebar] = useState<boolean>(false);
   const [searchParams, setSearchParams] = useSearchParams();
 
   useEffect(() => {
@@ -23,26 +23,44 @@ const ProductsList = () => {
     fetchProducts(categories);
   }, [searchParams]);
 
-  const handleFilter = useCallback((selectedList: number[]) => {
-    setSearchParams({ categories: selectedList.join(",") });
-    setCategory(selectedList);
-  }, []);
+  const handleFilter = useCallback(
+    (selectedList: number[]) => {
+      setSearchParams({ categories: selectedList.join(",") });
+      setCategory(selectedList);
+      try {
+        if (window.innerWidth < 768) setShowSidebar(false);
+      } catch (e) {
+        console.log(e);
+      }
+    },
+    [setSearchParams],
+  );
 
   if (loader || categoryLoader) return <Loader />;
   if (errors) return <div className="error-box">Something went wrong</div>;
 
   return (
     <div className="products-container">
-      <FilterSidebar
-        categories={categories}
-        selected={selectedCategories}
-        handleFilter={handleFilter}
-        loader={loader}
-      />
+      <button
+        className="toggle-sidebar"
+        onClick={() => setShowSidebar((s) => !s)}
+        aria-expanded={showSidebar}
+      >
+        {showSidebar ? "Hide Filters" : "Show Filters"}
+      </button>
+
+      <div className={`sidebar-wrapper ${showSidebar ? "open" : "collapsed"}`}>
+        <FilterSidebar
+          categories={categories}
+          selected={selectedCategories}
+          handleFilter={handleFilter}
+          loader={loader}
+        />
+      </div>
 
       <main className="main-content">
         <div className="products-grid">
-          {products?.length>0 ? (
+          {products?.length > 0 ? (
             products?.map((prd) => {
               const { id, title, images, price } = prd;
               const isItemInCart = cart.some((item) => item.id === id);
