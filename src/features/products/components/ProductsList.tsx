@@ -42,7 +42,7 @@ const ProductsList = () => {
 
       <main className="main-content">
         <div className="products-grid">
-          {products.length ? (
+          {products?.length>0 ? (
             products?.map((prd) => {
               const { id, title, images, price } = prd;
               const isItemInCart = cart.some((item) => item.id === id);
