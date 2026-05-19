@@ -18,7 +18,7 @@ const FilterSidebar: React.FC<Props> = ({
 
   useEffect(() => {
     setSelectedCategories(selected || []);
-  }, [selected]);;
+  }, [selected]);
 
   const handleToggle = useCallback((id: number) => {
     setSelectedCategories((prev) =>

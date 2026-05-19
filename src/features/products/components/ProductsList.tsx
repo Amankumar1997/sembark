@@ -1,6 +1,6 @@
 import Loader from "@/shared/common/Loader";
 import { useProduct } from "../hooks/useProducts";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useCategory } from "../hooks/useCategories";
 import FilterSidebar from "./FilterSidebar";
 import { Link, useSearchParams } from "react-router";
@@ -12,9 +12,8 @@ const ProductsList = () => {
   const { categoryLoader, categories } = useCategory();
   const { cart, addToCart, removeFromCart } = useCart();
 
-  const [selectedCategories, setCategory] = useState<number[] >([]);
+  const [selectedCategories, setCategory] = useState<number[]>([]);
   const [searchParams, setSearchParams] = useSearchParams();
-  const [filterLoader, setFilterLoader] = useState<boolean>(false);
 
   useEffect(() => {
     const categoryParams = searchParams.get("categories");
@@ -23,17 +22,12 @@ const ProductsList = () => {
     fetchProducts(categoryParams || "");
   }, [searchParams]);
 
-  useEffect(() => {
-    if (!loader) {
-      setFilterLoader(false);
-    }
-  }, [loader]);
 
-  const handleFilter = (selectedList: number[]) => {
+
+  const handleFilter = useCallback((selectedList: number[]) => {
     setSearchParams({ categories: selectedList.join(",") });
-    setFilterLoader(true);
     setCategory(selectedList);
-  };
+  }, []);
 
   if (loader || categoryLoader) return <Loader />;
   if (errors) return <div className="error-box">Something went wrong</div>;
@@ -44,7 +38,7 @@ const ProductsList = () => {
         categories={categories}
         selected={selectedCategories}
         handleFilter={handleFilter}
-        loader={filterLoader}
+        loader={loader}
       />
 
       <main className="main-content">
