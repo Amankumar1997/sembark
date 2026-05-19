@@ -3,13 +3,26 @@ import { ENDPOINTS } from "@/shared/endpoints";
 import type { Product } from "@/features/products/types";
 import axios from "axios";
 
-export const getProducts = async (categoryIds?: string) => {
+export const getProducts = async (categoryIds: number[]) => {
   try {
-    const params = categoryIds?.length ? { categoryIds: categoryIds } : {};
-    const response = await apiClient.get<Product[]>(ENDPOINTS.PRODUCTS, {
-      params,
+    if (!categoryIds.length) {
+      const response = await apiClient.get<Product[]>(ENDPOINTS.PRODUCTS);
+      return response.data;
+    }
+    const requests = categoryIds.map((id) => {
+      const params = { categoryId: id };
+      return apiClient.get<Product[]>(ENDPOINTS.PRODUCTS, {
+        params,
+      });
     });
-    return response.data;
+    const responses = await Promise.all(requests);
+    const mergedProducts: Product[] = [];
+    responses.forEach((res) => {
+      mergedProducts.push(...res.data);
+    });
+    debugger;
+
+    return mergedProducts;
   } catch (err: unknown) {
     if (axios.isAxiosError(err)) {
       return err.response?.data?.message || err.message;

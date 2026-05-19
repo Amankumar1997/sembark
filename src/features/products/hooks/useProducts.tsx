@@ -9,9 +9,9 @@ export const useProduct = () => {
 
 
 
-     const fetchProducts = async (categoryIds:string) => {
+     const fetchProducts = async (categoryIds:number[]) => {
       try {
-        const resData: Product[] = (await getProducts(categoryIds)) as Product[];
+        const resData: Product[] = (await getProducts(categoryIds));
         setProductList(resData);
       } catch (error:unknown) {
         setErrors(error);

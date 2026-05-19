@@ -17,9 +17,10 @@ const ProductsList = () => {
 
   useEffect(() => {
     const categoryParams = searchParams.get("categories");
-    setCategory(categoryParams?.split(",").map(Number) || []);
+    const categories:number[]=categoryParams?.split(",").map(Number) ??[]
+    setCategory(categories || []);
     setLoader(true);
-    fetchProducts(categoryParams || "");
+    fetchProducts(categories);
   }, [searchParams]);
 
 
@@ -43,7 +44,7 @@ const ProductsList = () => {
 
       <main className="main-content">
         <div className="products-grid">
-          {products.map((prd) => {
+          {products?.map((prd) => {
             const { id, title, images, price } = prd;
             const isItemInCart = cart.some((item) => item.id === id);
 
