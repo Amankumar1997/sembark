@@ -29,7 +29,7 @@ const ProductsList = () => {
     }
   }, [loader]);
 
-  const handleFilter = (selectedList: string[]) => {
+  const handleFilter = (selectedList: number[]) => {
     setSearchParams({ categories: selectedList.join(",") });
     setFilterLoader(true);
     setCategory(selectedList);

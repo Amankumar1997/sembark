@@ -4,7 +4,7 @@ import type { CategoryReq } from "../types";
 type Props = {
   categories: CategoryReq[];
   selected: string[];
-  handleFilter: (selected: string[]) => void;
+  handleFilter: (selected: number[]) => void;
   loader: boolean;
 };
 
@@ -39,11 +39,11 @@ const FilterSidebar: React.FC<Props> = ({
   };
 
   const onFilter = () => {
-    const selectedNames: string[] = categories
+    const selectedIds: number[] = categories
       .filter((cat) => selectedCategories.includes(cat.id))
-      .map((cat) => cat.name);
+      .map((item) => item.id);
 
-    handleFilter(selectedNames);
+    handleFilter(selectedIds);
   };
 
   return (
@@ -62,10 +62,10 @@ const FilterSidebar: React.FC<Props> = ({
             <span className="category-name">{cat.name}</span>
           </label>
         ))}
-        
-        <button 
-          className="apply-filter-btn" 
-          onClick={onFilter} 
+
+        <button
+          className="apply-filter-btn"
+          onClick={onFilter}
           disabled={loader}
         >
           {loader ? "Filtering..." : "Apply Filters"}
