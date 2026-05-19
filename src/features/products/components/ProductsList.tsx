@@ -12,13 +12,13 @@ const ProductsList = () => {
   const { categoryLoader, categories } = useCategory();
   const { cart, addToCart, removeFromCart } = useCart();
 
-  const [selectedCategories, setCategory] = useState<string[]>([]);
+  const [selectedCategories, setCategory] = useState<number[] >([]);
   const [searchParams, setSearchParams] = useSearchParams();
   const [filterLoader, setFilterLoader] = useState<boolean>(false);
 
   useEffect(() => {
     const categoryParams = searchParams.get("categories");
-    setCategory(categoryParams?.split(",") || []);
+    setCategory(categoryParams?.split(",").map(Number) || []);
     setLoader(true);
     fetchProducts(categoryParams || "");
   }, [searchParams]);

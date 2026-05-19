@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import type { CategoryReq } from "../types";
 
 type Props = {
   categories: CategoryReq[];
-  selected: string[];
+  selected: number[];
   handleFilter: (selected: number[]) => void;
   loader: boolean;
 };
@@ -20,8 +20,9 @@ const FilterSidebar: React.FC<Props> = ({
     if (selected && selected.length) {
       const list: number[] = [];
       categories.forEach((cat: CategoryReq) => {
-        if (selected.includes(cat.name)) {
-          list.push(cat.id);
+        const { id } = cat;
+        if (selected.includes(id)) {
+          list.push(id);
         }
       });
       setSelectedCategories(list);
@@ -30,21 +31,15 @@ const FilterSidebar: React.FC<Props> = ({
     }
   }, [selected, categories]);
 
-  const handleToggle = (id: number) => {
-    if (selectedCategories.includes(id)) {
-      setSelectedCategories(selectedCategories.filter((item) => item !== id));
-    } else {
-      setSelectedCategories([...selectedCategories, id]);
-    }
-  };
+  const handleToggle = useCallback((id: number) => {
+    setSelectedCategories((prev) =>
+      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id],
+    );
+  }, []);
 
-  const onFilter = () => {
-    const selectedIds: number[] = categories
-      .filter((cat) => selectedCategories.includes(cat.id))
-      .map((item) => item.id);
-
-    handleFilter(selectedIds);
-  };
+  const onFilter = useCallback(() => {
+    handleFilter(selectedCategories);
+  }, [handleFilter, selectedCategories]);
 
   return (
     <aside className="sidebar">
@@ -75,4 +70,4 @@ const FilterSidebar: React.FC<Props> = ({
   );
 };
 
-export default FilterSidebar;
+export default React.memo(FilterSidebar);
